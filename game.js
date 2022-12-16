@@ -1,4 +1,9 @@
-//CALL WILD POKEMON
+// Define the prompt function
+const prompt = require('prompt-sync')();
+
+// Other code goes here...
+
+// Define the WildPokemon constructor
 function WildPokemon(type) {
   this.type = type;
 }
@@ -22,8 +27,6 @@ moves[1] = new Move("Headbutt", 4);
 moves[2] = new Move("Tackle", 3);
 moves[3] = new Move("Cut", 4);
 
-//CALL WILD POKEMON STATS
-
 //CALL WILD POKEMON ID
 var wildPokemonId;
 function callWildPokemonId() {
@@ -39,7 +42,7 @@ function callWildPokemonLevel() {
 //CALL WILD POKEMON HEALTH    
 var wildPokemonHealth;
 function callWildPokemonHealth() {
-  wildPokemonHealth = Math.floor(Math.random() + wildPokemonLevel + 3);
+  wildPokemonHealth = Math.floor(Math.random() * (wildPokemonLevel + 3) + 1);
 }
 
 //CALL WILD POKEMON ATTACK
@@ -61,62 +64,64 @@ function callPlayerMoveDamage() {
   damage = Math.floor(Math.random() * moves[playerMove].basedmg + 3);
 }
 
-//CALL PLAYER ATTACK
+// Use the prompt function
 function selectMove() {
-  var playerMove = prompt("You have 4 moves, " + moves[0].move + ", " + moves[1].move + ", " + moves[2].move + " and " + moves[3].move + ", which move do you want to use?").toUpperCase();
+  let playerMove = prompt("You have 4 moves, " + moves[0].move + ", " + moves[1].move + ", " + moves[2].move + " and " + moves[3].move + ", which move do you want to use?").toUpperCase();
   if (playerMove === "") {
     selectMove();
   } else {
+    let moveIndex;
     switch (playerMove) {
       case "SLAM":
-        playerMove = 0;
-        callPlayerMoveDamage();
-        playerAttack();
+        moveIndex = 0;
         break;
       case "HEADBUTT":
-        playerMove = 1;
-        callPlayerMoveDamage();
-        playerAttack();
+        moveIndex = 1;
         break;
       case "TACKLE":
-        playerMove = 2;
-        callPlayerMoveDamage();
-        playerAttack();
+        moveIndex = 2;
         break;
       case "CUT":
-        playerMove = 3;
-        callPlayerMoveDamage();
-        playerAttack();
+        moveIndex = 3;
         break;
       default:
-        alert('Move not found');
+        console.log('Move not found');
         selectMove();
         break;
-        }
-        }
-        }
+    }
+    callPlayerMoveDamage(moveIndex);
+    playerAttack(moveIndex);
+  }
+}
+
+//CALL PLAYER ATTACK DAMAGE
+function callPlayerMoveDamage(moveIndex) {
+  damage = Math.floor(Math.random() * moves[moveIndex].basedmg + 3);
+}
 
 //WILD POKEMON ATTACK
 function wildPokemonAttack() {
-  if (pokemonHealth > 0) {
-    pokemonHealth = pokemonHealth - damage;
-    alert("Wild " + pokemonStats[wildPokemonId].type + " uses " + moves[moveId].move + " dealing " + damage + " damage!");
-    attackLoop();
+  if (wildPokemonHealth > 0) {
+    wildPokemonHealth = wildPokemonHealth - damage;
+    console.log("Wild " + pokemonStats[wildPokemonId].type + " uses " + moves[moveId].move + " dealing " + damage + " damage!");
+    console.log(pokemonStats[wildPokemonId].type + " has " + wildPokemonHealth + " health remaining!");
+    playerTurn = true;
+    wildPokemonFaint();
   } else {
-    alert("Pokemon fainted");
+    console.log("Pokemon fainted");
   }
 }
 
 //PLAYER ATTACK
-function playerAttack() {
-  alert("Player uses " + moves[playerMove].move + " dealing " + damage + " damage!");
+function playerAttack(moveIndex) {
+  console.log("Player uses " + moves[moveIndex].move + " dealing " + damage + " damage!");
   if (wildPokemonHealth > 0) {
     wildPokemonHealth = wildPokemonHealth - damage;
-    alert(pokemonStats[wildPokemonId].type + " has " + wildPokemonHealth + " health remaining!");
+    console.log(pokemonStats[wildPokemonId].type + " has " + wildPokemonHealth + " health remaining!");
     playerTurn = false;
     wildPokemonFaint();
   } else {
-    alert(pokemonStats[wildPokemonId].type + " fainted");
+    console.log(pokemonStats[wildPokemonId].type + " fainted");
   }
 }
 
@@ -131,7 +136,7 @@ function randomPokemon() {
 //FAINTED WILD POKEMON
 function wildPokemonFaint() {
   if (wildPokemonHealth <= 0) {
-    alert(pokemonStats[wildPokemonId].type + " fainted! You win!");
+    console.log(pokemonStats[wildPokemonId].type + " fainted! You win!");
   } else {
     wildPokemonAttack();
   }
@@ -154,4 +159,3 @@ function startGame() {
 }
 
 startGame();
-
